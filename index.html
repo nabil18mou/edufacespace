@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduFace - منصة اجتماعية حديثة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+  font-family:'Tajawal',sans-serif; 
+}
+
+body { 
+  background:#eef2f7; 
+  color:#333; 
+  line-height:1.6; 
+  font-size:16px;
+}
+
+a { text-decoration:none; color:inherit; }
+
+header { 
+  background: linear-gradient(135deg,#3a86ff,#0077b6); 
+  color:white; 
+  text-align:center; 
+  padding:30px 15px; 
+  font-weight:100; 
+  box-shadow:0 4px 15px rgba(0,0,0,0.1); 
+  border-bottom:4px solid #ffd60a; 
+}
+
+header h1 { font-size:20px; margin-bottom:5px; }
+header p { 
+  font-size:13px; 
+  font-weight:bold; 
+  color:#000; 
+  background:white; 
+  display:inline-block; 
+  padding:8px 15px; 
+  border-radius:12px; 
+  margin-top:10px; 
+  box-shadow:0 3px 10px rgba(0,0,0,0.1); 
+}
+
+nav { 
+  display:flex; 
+  justify-content:space-around; 
+  flex-wrap:wrap; 
+  background:#16a085; 
+  padding:10px 0; 
+  position:sticky; 
+  top:0; 
+  z-index:100; 
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+nav span { 
+  cursor:pointer; 
+  color:white; 
+  font-weight:500; 
+  font-size:14px; 
+  margin:5px 10px; 
+  transition:0.3s; 
+}
+
+nav span:hover { color:#b2f7ef; }
+
+.container { max-width:900px; margin:auto; padding:10px; }
+
+.sections { 
+  display:grid; 
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); 
+  gap:10px; 
+  margin-bottom:15px; 
+}
+
+.section-card { 
+  background:#0d3b66; 
+  color:white; 
+  border-radius:15px; 
+  padding:20px 10px; 
+  text-align:center; 
+  cursor:pointer; 
+  box-shadow:0 4px 12px rgba(0,0,0,0.1); 
+  transition:0.3s; 
+  font-weight:600;
+}
+
+.section-card:hover { 
+  transform:translateY(-5px) scale(1.05); 
+  background:#1a4b8c; 
+}
+
+.section-card span { 
+  display:block; 
+  font-size:30px; 
+  margin-bottom:8px; 
+}
+
+.post-box, .post { 
+  background:white; 
+  border-radius:15px; 
+  padding:12px; 
+  margin-bottom:15px; 
+  box-shadow:0 3px 10px rgba(0,0,0,0.08); 
+}
+
+textarea, input, select { 
+  width:100%; 
+  border:1px solid #ccc; 
+  border-radius:10px; 
+  padding:8px; 
+  font-size:14px; 
+  margin-bottom:6px; 
+}
+
+button { 
+  background:#1abc9c; 
+  color:white; 
+  border:none; 
+  border-radius:12px; 
+  padding:8px 14px; 
+  cursor:pointer; 
+  font-size:14px; 
+  transition:0.3s; 
+}
+
+button:hover { 
+  background:#16a085; 
+  transform:scale(1.05); 
+}
+
+.actions { 
+  margin-top:8px; 
+  display:flex; 
+  justify-content:space-between; 
+  font-size:13px; 
+}
+
+.actions span { 
+  cursor:pointer; 
+  color:#16a085; 
+  font-weight:500; 
+}
+
+.comment-box { display:flex; gap:6px; margin-top:8px; }
+
+.comment-box input { flex:1; padding:6px; border-radius:8px; border:1px solid #ccc; }
+
+.comment-box .commentBtn { background:#2980b9; color:white; }
+
+.comment-box .commentBtn:hover { background:#1c6695; }
+
+.commentsList { margin-top:8px; font-size:12px; }
+
+.commentsList .comment { background:#f0f4f8; padding:6px 8px; border-radius:8px; margin-top:5px; }
+
+.chat-btn { 
+  position: fixed; 
+  bottom:20px; 
+  right:20px; 
+  background:#28a745; 
+  color:white; 
+  border:none; 
+  border-radius:50%; 
+  width:50px; 
+  height:50px; 
+  font-size:28px; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  cursor:pointer; 
+  box-shadow:0 6px 18px rgba(0,0,0,0.25); 
+  transition: transform 0.3s; 
+  z-index:1000; 
+}
+
+.chat-btn:hover { transform:scale(1.15); }
+
+#chatWindow { 
+  display:none; 
+  flex-direction:column; 
+  position:fixed; 
+  bottom:80px; 
+  right:10px; 
+  width:95%; 
+  max-width:360px; 
+  height:500px; 
+  background:white; 
+  border-radius:15px; 
+  box-shadow:0 6px 18px rgba(0,0,0,0.25); 
+  overflow:hidden; 
+  z-index:1000; 
+  font-size:14px; 
+}
+
+#chatWindow header { background:#28a745; color:white; font-weight:bold; padding:12px; text-align:center; }
+
+#chatBody { flex:1; padding:10px; overflow-y:auto; background:#f0f4f8; }
+
+#chatFooter { display:flex; border-top:1px solid #ccc; padding:6px; }
+
+#chatFooter input { flex:1; border-radius:8px; border:1px solid #ccc; padding:6px; font-size:14px; }
+
+#chatFooter button { margin-left:5px; border-radius:8px; padding:6px 10px; background:#28a745; color:white; font-size:14px; }
+
+/* Responsive */
+@media screen and (max-width:480px){
+  header h1 { font-size:18px; }
+  header p { font-size:12px; padding:5px 10px; }
+  nav span { font-size:12px; margin:3px 5px; }
+  .section-card { padding:15px 8px; }
+  .section-card span { font-size:24px; }
+  .post-box, .post { padding:10px; }
+  textarea, input, select { font-size:13px; padding:5px; }
+  button { font-size:13px; padding:5px 10px; }
+  .chat-btn { width:45px; height:45px; font-size:26px; }
+  #chatWindow { height:450px; bottom:70px; width:90%; }
+}
+</style>
+
+</head>
+<body>
+
+<header>
+<h1><i class="fas fa-graduation-cap" style="margin-left:8px;"></i> EduFace - منصة اجتماعية حديثة</h1>
+<p>مرحبًا بك في منصتك التعليمية الجديدة! تواصل، تعلم، وشارك أفكارك بحرية.</p>
+</header>
+
+<nav>
+<span id="navHome"><i class="fas fa-home"></i> الرئيسية</span>
+<span id="navSections"><i class="fas fa-book"></i> الأقسام</span>
+<span id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</span>
+</nav>
+
+<div class="container">
+  <div id="home" style="display:block;">
+    <h2>آخر المنشورات</h2>
+    <div id="homePosts"></div>
+  </div>
+
+  <div id="sections" style="display:none;">
+    <h2 style="color:#0d3b66; margin-bottom:15px; text-align:center;">الأقسام المتاحة</h2>
+    <div class="sections">
+      <div class="section-card" data-section="videos"><i class="fas fa-video"></i> فيديوهات</div>
+      <div class="section-card" data-section="challenges"><i class="fas fa-puzzle-piece"></i> تحديات</div>
+      <div class="section-card" data-section="articles"><i class="fas fa-book-open"></i> مقالات</div>
+      <div class="section-card" data-section="activities"><i class="fas fa-paint-brush"></i> أنشطة</div>
+    </div>
+    <div id="sectionContent" style="margin-top:20px;"></div>
+  </div>
+</div>
+
+<button id="chatBtn" class="chat-btn"><i class="fas fa-comment-dots"></i></button>
+
+<div id="chatWindow">
+<header>الدردشة المباشرة</header>
+<select id="chatUserSelect" style="width:100%;padding:10px;border:none;border-bottom:1px solid #ccc;"><option value="all">الكل</option></select>
+<div id="chatBody"></div>
+<div id="chatFooter">
+<input type="text" id="chatInput" placeholder="اكتب رسالتك...">
+<button id="sendChatBtn">إرسال</button>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getDatabase, ref, set, push, remove, onChildAdded, get } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBcXsXT_Baq8ShLNt5vXPh8dqoGZsL6bj0",
+  authDomain: "eduface-space-24275.firebaseapp.com",
+  databaseURL: "https://eduface-space-24275-default-rtdb.firebaseio.com",
+  projectId: "eduface-space-24275",
+  storageBucket: "eduface-space-24275.firebasestorage.app",
+  messagingSenderId: "573013884929",
+  appId: "1:573013884929:web:0a5b96f1fefd3dd9ce0000",
+  measurementId: "G-ZV4Z17EFZG"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+getAnalytics(app);
+
+let currentUser = null;
+let currentUserName = "";
+
+window.addEventListener("DOMContentLoaded", ()=>{
+  onAuthStateChanged(auth,user=>{
+    if(user){
+      currentUser = user;
+      currentUserName = user.displayName || user.email;
+      set(ref(db,"users/"+currentUser.uid),{ name: currentUserName, uid: currentUser.uid });
+      loadAllPosts();
+      loadUsersForChat();
+    } else { window.location.href="login.html"; }
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", async ()=>{
+    try{ await signOut(auth); window.location.href="login.html"; }
+    catch(err){ alert("حدث خطأ أثناء تسجيل الخروج"); }
+  });
+
+  document.getElementById("navHome").addEventListener("click",()=>{
+    document.getElementById("home").style.display="block";
+    document.getElementById("sections").style.display="none";
+  });
+  document.getElementById("navSections").addEventListener("click",()=>{
+    document.getElementById("home").style.display="none";
+    document.getElementById("sections").style.display="block";
+  });
+
+  const sectionsData = {videos:"🎥 فيديوهات",challenges:"🧩 تحديات",articles:"📖 مقالات",activities:"🎨 أنشطة"};
+  const container = document.getElementById("sectionContent");
+  const homePosts = document.getElementById("homePosts");
+
+  document.querySelectorAll(".section-card").forEach(card=>{
+    card.addEventListener("click", () => {
+      const section = card.dataset.section;
+      container.innerHTML = `
+        <div class="section-post-box" style="background:#f9f9f9; padding:15px; border-radius:12px; margin-bottom:15px; box-shadow:0 3px 10px rgba(0,0,0,0.05);">
+          <input type="text" id="${section}Title" placeholder="عنوان المنشور" class="section-input">
+          <textarea id="${section}Content" rows="4" placeholder="اكتب محتوى ${sectionsData[section]}..." class="section-textarea"></textarea>
+          <input type="text" id="${section}Media" placeholder="رابط فيديو/صورة (اختياري)" class="section-input">
+          <button id="${section}PublishBtn" class="section-btn">نشر</button>
+        </div>
+        <div id="${section}Posts" class="section-posts"></div>
+      `;
+      loadPosts(section);
+
+      document.getElementById(section + "PublishBtn").addEventListener("click", ()=>{
+        const title = document.getElementById(section+"Title").value.trim();
+        const text = document.getElementById(section+"Content").value.trim();
+        const media = document.getElementById(section+"Media").value.trim();
+        if(!title && !text && !media){ alert("اكتب عنوان أو محتوى أو رابط"); return; }
+        const postRef = push(ref(db,"posts"));
+        set(postRef,{ uid:currentUser.uid, userName:currentUserName, section, title, text, media, timestamp:Date.now() });
+        document.getElementById(section+"Title").value="";
+        document.getElementById(section+"Content").value="";
+        document.getElementById(section+"Media").value="";
+      });
+    });
+  });
+
+  function formatMediaUrl(url){
+    if(!url) return "";
+    if(url.includes("youtube.com") || url.includes("youtu.be")){
+      let id = url.includes("watch?v=")? url.split("watch?v=")[1].split("&")[0] : url.split("youtu.be/")[1].split("?")[0];
+      return "https://www.youtube.com/embed/"+id;
+    }
+    if(url.includes("drive.google.com")){
+      const match=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if(match) return "https://drive.google.com/file/d/"+match[1]+"/preview";
+    }
+    if(/\.(jpg|jpeg|png|gif|webp)$/i.test(url)) return url;
+    return "";
+  }
+
+  function createPostDiv(data,key){
+    const div=document.createElement("div"); div.className="post"; div.id="post-"+key;
+    let mediaContent=""; if(data.media){ const mediaUrl=formatMediaUrl(data.media); if(mediaUrl.includes("youtube.com/embed")||mediaUrl.includes("drive.google.com/file")) mediaContent=`<iframe width="100%" height="300" src="${mediaUrl}" frameborder="0" allowfullscreen style="border-radius:10px; margin-top:8px;"></iframe>`; else mediaContent=`<img src="${mediaUrl}" style="width:100%; height:300px; object-fit:cover; border-radius:10px; margin-top:8px;">`; }
+    div.innerHTML=`
+      <div style="padding:12px; background:#fff; border-radius:12px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+        <strong style="color:#16a085;">${data.userName}</strong>
+        ${data.title?`<h3 style="margin:5px 0; color:#0d3b66;">${data.title}</h3>`:""}
+        <p style="margin:5px 0; color:#333;">${data.text||""}</p>
+        ${mediaContent?`<div>${mediaContent}</div>`:""}
+        <small style="color:#888;">تاريخ النشر: ${new Date(data.timestamp).toLocaleString()}</small>
+        <div class="actions">
+          <span class="likeBtn">إعجاب</span>
+          <span class="shareBtn">إعادة مشاركة</span>
+          ${data.uid===currentUser.uid?`<span class="deleteBtn">حذف</span>`:""}
+        </div>
+        <div class="commentsList"></div>
+        <div class="comment-box">
+          <input type="text" placeholder="أضف تعليقًا...">
+          <button class="commentBtn">تعليق</button>
+        </div>
+      </div>
+    `;
+    // Events
+    const likeBtn = div.querySelector(".likeBtn");
+    likeBtn.addEventListener("click",()=>{ likeBtn.textContent = likeBtn.textContent==="إعجاب"?"❤️ معجب":"إعجاب"; });
+    const shareBtn = div.querySelector(".shareBtn");
+    shareBtn.addEventListener("click",()=>{ const newPostRef=push(ref(db,"posts")); set(newPostRef,{...data,timestamp:Date.now(),userName:currentUserName,uid:currentUser.uid}); });
+    const deleteBtn = div.querySelector(".deleteBtn");
+    if(deleteBtn) deleteBtn.addEventListener("click",()=>{ remove(ref(db,"posts/"+key)).then(()=>{ div.remove(); const homeDiv=document.getElementById("homePost-"+key); if(homeDiv) homeDiv.remove(); }); });
+    const commentBtn = div.querySelector(".commentBtn");
+    const input = div.querySelector(".comment-box input");
+    const commentsList = div.querySelector(".commentsList");
+    commentBtn.addEventListener("click",()=>{ const val=input.value.trim(); if(!val) return; const commentRef=push(ref(db,"posts/"+key+"/comments")); set(commentRef,{ uid:currentUser.uid, userName:currentUserName, text:val, timestamp:Date.now() }); input.value=""; });
+    onChildAdded(ref(db,"posts/"+key+"/comments"),snapshot=>{ const cdata=snapshot.val(); const cDiv=document.createElement("div"); cDiv.className="comment"; cDiv.textContent=cdata.userName+": "+cdata.text; commentsList.appendChild(cDiv); });
+    return div;
+  }
+
+  function loadPosts(section){
+    const postsContainer=document.getElementById(section+"Posts"); postsContainer.innerHTML="";
+    onChildAdded(ref(db,"posts"),snapshot=>{
+      const data=snapshot.val();
+      if(data.section===section){
+        const div=createPostDiv(data,snapshot.key);
+        postsContainer.prepend(div);
+        if(!document.getElementById("homePost-"+snapshot.key)){ const homeDiv=div.cloneNode(true); homeDiv.id="homePost-"+snapshot.key; homePosts.prepend(homeDiv); }
+      }
+    });
+  }
+
+  function loadAllPosts(){
+    onChildAdded(ref(db,"posts"),snapshot=>{
+      const data=snapshot.val();
+      if(!document.getElementById("homePost-"+snapshot.key)){
+        const div=createPostDiv(data,snapshot.key); div.id="homePost-"+snapshot.key; homePosts.prepend(div);
+      }
+    });
+  }
+
+  const chatBtn=document.getElementById("chatBtn");
+  const chatWindow=document.getElementById("chatWindow");
+  const chatBody=document.getElementById("chatBody");
+  const chatInput=document.getElementById("chatInput");
+  const sendChatBtn=document.getElementById("sendChatBtn");
+  const chatUserSelect=document.getElementById("chatUserSelect");
+
+  chatBtn.addEventListener("click",()=>{ chatWindow.style.display=chatWindow.style.display==="flex"?"none":"flex"; });
+
+  function sendMessage(msg){
+    if(!msg) return;
+    const toUser=chatUserSelect.value||"all";
+    const chatRef=push(ref(db,"chats/"+currentUser.uid+"/"+(toUser==="all"?"all":toUser)));
+    set(chatRef,{ from:currentUserName, to:toUser, text:msg, timestamp:Date.now() });
+  }
+
+  sendChatBtn.addEventListener("click",()=>{ sendMessage(chatInput.value.trim()); chatInput.value=""; });
+  chatInput.addEventListener("keypress",e=>{ if(e.key==="Enter"){ sendMessage(chatInput.value.trim()); chatInput.value=""; }});
+
+  function loadUsersForChat(){
+    get(ref(db,"users")).then(snapshot=>{
+      if(snapshot.exists()){
+        const users=snapshot.val();
+        chatUserSelect.innerHTML=`<option value="all">الكل</option>`;
+        for(const uid in users){
+          if(uid!==currentUser.uid){
+            const option=document.createElement("option"); option.value=uid; option.textContent=users[uid].name;
+            chatUserSelect.appendChild(option);
+          }
+        }
+      }
+    });
+  }
+
+  onChildAdded(ref(db,"chats/"+currentUser.uid),snapshot=>{
+    const conv=snapshot.val();
+    for(const key in conv){
+      onChildAdded(ref(db,"chats/"+currentUser.uid+"/"+key),msgSnap=>{
+        const msg=msgSnap.val();
+        const msgDiv=document.createElement("div");
+        msgDiv.textContent=`${msg.from}: ${msg.text}`;
+        msgDiv.style.margin="5px 0"; msgDiv.style.padding="6px 10px"; msgDiv.style.borderRadius="10px"; msgDiv.style.background=msg.from===currentUserName?"#d1f7c4":"#f0f0f0";
+        chatBody.appendChild(msgDiv); chatBody.scrollTop=chatBody.scrollHeight;
+      });
+    }
+  });
+
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EduFace - تسجيل الدخول / إنشاء حساب</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#4B79A1;
+  --dark:#283E51;
+  --bg:#f7f9fc;
+  --text:#333;
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Tajawal',sans-serif;
+  background:linear-gradient(135deg,#e9eef5,#f3f6fb,#ffffff);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:1rem;
+}
+.container{
+  width:100%;
+  max-width:900px;
+  background:#fff;
+  border-radius:var(--radius);
+  box-shadow:0 12px 35px rgba(0,0,0,0.08);
+  display:flex;
+  overflow:hidden;
+  transition:all .3s ease;
+}
+.aside{
+  flex:1;
+  background:linear-gradient(145deg,var(--primary),var(--dark));
+  color:#fff;
+  padding:3rem 2rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+}
+.aside h1{font-size:2rem;margin-bottom:1rem;}
+.aside p{
+  opacity:.95;
+  margin-bottom:1.3rem;
+  line-height:1.8;
+  font-size:1rem;
+  font-weight:500;
+}
+.logo{
+  font-weight:700;
+  font-size:1.5rem;
+  margin-bottom:2rem;
+  color:#fff;
+  border-bottom:2px solid rgba(255,255,255,0.4);
+  padding-bottom:.4rem;
+  letter-spacing:1px;
+}
+.form-area{
+  flex:1.2;
+  background:var(--bg);
+  padding:2.5rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.tabs{
+  display:flex;
+  border-radius:10px;
+  background:#e8ecf3;
+  margin-bottom:1.8rem;
+  padding:4px;
+}
+.tab{
+  flex:1;
+  background:none;
+  border:none;
+  padding:.9rem;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  font-size:1rem;
+  color:#555;
+  transition:.3s;
+}
+.tab.active{
+  background:#fff;
+  color:var(--dark);
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+form{display:none;flex-direction:column;animation:fadeSlide .5s ease;}
+form.active{display:flex;}
+.form-group{margin-bottom:1.2rem;display:flex;flex-direction:column;}
+label{font-weight:600;margin-bottom:.4rem;color:var(--text);}
+input[type="text"],input[type="email"],input[type="password"]{
+  padding:.8rem 1rem;
+  border:1px solid #ccc;
+  border-radius:10px;
+  font-size:.95rem;
+  outline:none;
+  transition:border .3s,box-shadow .3s;
+}
+input:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(75,121,161,0.15);
+}
+.password-wrap{position:relative;}
+.password-wrap .toggle{
+  position:absolute;
+  left:.8rem;
+  top:50%;
+  transform:translateY(-50%);
+  background:none;
+  border:none;
+  cursor:pointer;
+  color:#777;
+  font-size:1rem;
+}
+.btn{
+  padding:.9rem 1.2rem;
+  border:none;
+  border-radius:10px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .3s;
+  font-size:1rem;
+}
+.btn.primary{
+  background:linear-gradient(135deg,var(--primary),var(--dark));
+  color:#fff;
+}
+.btn.primary:hover{opacity:.9;transform:translateY(-1px);}
+.actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1rem;
+  font-size:.9rem;
+}
+.link{
+  color:var(--primary);
+  text-decoration:none;
+}
+.link:hover{text-decoration:underline;}
+@keyframes fadeSlide{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@media(max-width:900px){
+  .container{flex-direction:column;width:95%;}
+  .aside{align-items:center;text-align:center;padding:2.5rem 1.5rem;}
+  .form-area{padding:2rem;width:100%;}
+  .aside h1{font-size:1.7rem;}
+  .aside p{font-size:.95rem;}
+}
+@media(max-width:480px){
+  .aside h1{font-size:1.4rem;}
+  .aside p{font-size:.9rem;}
+  .btn{font-size:.9rem;padding:.8rem 1rem;}
+}
+</style>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBcXsXT_Baq8ShLNt5vXPh8dqoGZsL6bj0",
+  authDomain: "eduface-space-24275.firebaseapp.com",
+  databaseURL: "https://eduface-space-24275-default-rtdb.firebaseio.com",
+  projectId: "eduface-space-24275",
+  storageBucket: "eduface-space-24275.firebasestorage.app",
+  messagingSenderId: "573013884929",
+  appId: "1:573013884929:web:0a5b96f1fefd3dd9ce0000",
+  measurementId: "G-ZV4Z17EFZG"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+getAnalytics(app);
+
+const loginTab = document.getElementById("login-tab");
+const registerTab = document.getElementById("register-tab");
+const loginForm = document.getElementById("login-form");
+const registerForm = document.getElementById("register-form");
+
+loginTab.onclick = () => {
+  loginTab.classList.add("active");
+  registerTab.classList.remove("active");
+  loginForm.classList.add("active");
+  registerForm.classList.remove("active");
+};
+registerTab.onclick = () => {
+  registerTab.classList.add("active");
+  loginTab.classList.remove("active");
+  registerForm.classList.add("active");
+  loginForm.classList.remove("active");
+};
+
+window.togglePassword = (id) => {
+  const input = document.getElementById(id);
+  input.type = input.type === "password" ? "text" : "password";
+};
+
+window.register = async () => {
+  const name = document.getElementById("reg-name").value.trim();
+  const email = document.getElementById("reg-email").value.trim();
+  const pass = document.getElementById("reg-pass").value;
+  const pass2 = document.getElementById("reg-pass2").value;
+  if (pass !== pass2) return alert("كلمتا المرور غير متطابقتين!");
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+    const user = userCredential.user;
+
+    // تحديث displayName في Auth
+    await updateProfile(user, { displayName: name });
+
+    // حفظ الاسم الكامل في Realtime Database
+    await set(ref(db, "users/" + user.uid), {
+      fullName: name,
+      email: email,
+      uid: user.uid
+    });
+
+    alert(`تم إنشاء الحساب بنجاح 🎉 مرحباً ${name}`);
+    loginTab.click();
+  } catch (error) {
+    alert("حدث خطأ: " + error.message);
+  }
+};
+
+window.login = async () => {
+  const email = document.getElementById("login-email").value.trim();
+  const pass = document.getElementById("login-pass").value;
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+    const user = userCredential.user;
+
+    // استدعاء الاسم من displayName أو Realtime Database
+    let fullName = user.displayName;
+    if (!fullName) {
+      const dbRef = ref(db);
+      const snapshot = await get(child(dbRef, `users/${user.uid}`));
+      fullName = snapshot.exists() ? snapshot.val().fullName : user.email;
+    }
+
+    alert(`تم تسجيل الدخول بنجاح ✅ مرحباً ${fullName}`);
+    window.location.href = "edufacespace.html"; // غيّر إلى رابط الصفحة الرئيسية
+  } catch (error) {
+    alert("فشل تسجيل الدخول: " + error.message);
+  }
+};
+</script>
+</head>
+
+<body>
+<div class="container">
+  <div class="aside">
+    <div class="logo">EduFace</div>
+    <h1>ابدأ رحلتك التعليمية معنا </h1>
+    <p>مرحبًا بك في <strong>EduFace</strong>، عالمك الجديد للتعلم والتواصل!  
+    اكتشف محتوى مميز، تواصل مع أصدقاء يشاطرونك الشغف، وابدأ اليوم أول خطوة نحو تطوير ذاتك </p>
+  </div>
+
+  <div class="form-area">
+    <div class="tabs">
+      <button class="tab active" id="login-tab">تسجيل الدخول</button>
+      <button class="tab" id="register-tab">إنشاء حساب</button>
+    </div>
+
+    <form id="login-form" class="active">
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <input id="login-email" type="email" placeholder="example@email.com" required>
+      </div>
+      <div class="form-group password-wrap">
+        <label>كلمة المرور</label>
+        <input id="login-pass" type="password" placeholder="••••••••" required>
+        <button type="button" class="toggle" onclick="togglePassword('login-pass')">👁️</button>
+      </div>
+      <div class="actions">
+        <label><input type="checkbox"> تذكرني</label>
+        <a href="#" class="link">نسيت كلمة المرور؟</a>
+      </div>
+      <button type="button" class="btn primary" onclick="login()">تسجيل الدخول</button>
+    </form>
+
+    <form id="register-form">
+      <div class="form-group">
+        <label>الاسم الكامل</label>
+        <input id="reg-name" type="text" placeholder="الاسم الكامل" required>
+      </div>
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <input id="reg-email" type="email" placeholder="example@email.com" required>
+      </div>
+      <div class="form-group password-wrap">
+        <label>كلمة المرور</label>
+        <input id="reg-pass" type="password" placeholder="••••••••" required>
+        <button type="button" class="toggle" onclick="togglePassword('reg-pass')">👁️</button>
+      </div>
+      <div class="form-group">
+        <label>تأكيد كلمة المرور</label>
+        <input id="reg-pass2" type="password" placeholder="أعد كتابة كلمة المرور" required>
+      </div>
+      <button type="button" class="btn primary" onclick="register()">إنشاء الحساب</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>
